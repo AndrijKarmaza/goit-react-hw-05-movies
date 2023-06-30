@@ -4,7 +4,7 @@ import css from './SharedLayout.module.css';
 
 const SharedLayout = () => {
   return (
-    <div className={css.container}>
+    <>
       <header>
         <nav>
           <ul className={css.navigation}>
@@ -21,12 +21,15 @@ const SharedLayout = () => {
           </ul>
         </nav>
       </header>
+
       <main>
-        <Suspense>
-          <Outlet />
-        </Suspense>
+        <div className={css.container}>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </div>
       </main>
-    </div>
+    </>
   );
 };
 
