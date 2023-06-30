@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { BASE_URL, KEY, BASE_IMG_URL } from '../../components/servises/api.js';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import css from './Home.module.css';
 
 const Home = () => {
   const [topList, setTopList] = useState([]);
@@ -38,11 +39,15 @@ const Home = () => {
   return (
     <>
       <h1>Weekly movie trends</h1>
-      <ul>
+      <ul className={css.movie_list}>
         {topList.map(({ poster_path, title, name, id }) => (
           <Link key={id} to={`/movies/${id}`} state={{ from: location }}>
-            <li key={id}>
-              <img src={`${BASE_IMG_URL}${poster_path}`} alt={title} />
+            <li key={id} className={css.gallery_item}>
+              <img
+                src={`${BASE_IMG_URL}${poster_path}`}
+                alt={title}
+                loading="lazy"
+              />
               <h2>{title}</h2>
             </li>
           </Link>

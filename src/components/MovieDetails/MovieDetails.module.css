@@ -1,0 +1,36 @@
+.btn_back,
+.btn_addition {
+  display: block;
+  width: 50px;
+  padding: 8px 24px;
+  background-color: #e1b16a;
+  border-radius: 8px;
+  text-align: center;
+
+  margin-right: 50px;
+  margin-bottom: 32px;
+}
+
+.btn_back:hover,
+.btn_addition:hover {
+  background-color: #78a5a3;
+  color: #fff;
+}
+
+.movie_card {
+  display: flex;
+}
+
+.movie_card_descr {
+  display: flex;
+  flex-direction: column;
+}
+
+.movie_img {
+  border-radius: 8px;
+  margin-right: 32px;
+}
+
+.btn_addition_list {
+  display: flex;
+}

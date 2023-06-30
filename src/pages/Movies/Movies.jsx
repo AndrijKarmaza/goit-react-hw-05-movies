@@ -5,6 +5,7 @@ import moviePoster from '../../images/movie-poster.png';
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import css from './Movies.module.css';
 
 const Movies = () => {
   const [movieList, setMovieList] = useState();
@@ -58,14 +59,17 @@ const Movies = () => {
           autoComplete="off"
           autoFocus
           placeholder="Search movie"
+          className={css.search_input}
         />
-        <button type="submit">Search</button>
+        <button type="submit" className={css.search_btn}>
+          Search
+        </button>
       </form>
       {movieList && (
-        <ul>
+        <ul className={css.movie_list}>
           {movieList.map(({ poster_path, title, id }) => (
             <Link key={id} to={`${id}`} state={{ from: location }}>
-              <li key={id}>
+              <li key={id} className={css.gallery_item}>
                 <img
                   src={
                     poster_path ? `${BASE_IMG_URL}${poster_path}` : moviePoster
