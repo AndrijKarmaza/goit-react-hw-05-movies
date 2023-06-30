@@ -2,13 +2,18 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL, KEY } from '../servises/api.js';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const Reviews = () => {
   const { movieId } = useParams();
 
   const [movieReviews, setMovieReviews] = useState();
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     async function getMovieReviews() {
       try {
         const response = await axios.get(
@@ -16,11 +21,19 @@ const Reviews = () => {
         );
         setMovieReviews(response.data.results);
       } catch (error) {
-        console.error(error);
+        setError(true);
+      } finally {
+        setLoading(false);
+        Loading.remove();
       }
     }
     getMovieReviews();
   }, [movieId]);
+
+  loading && Loading.standard('Loading...');
+
+  error &&
+    Notify.failure('Oops! Something went wrong. Please try reloading the page');
 
   if (!movieReviews) {
     return;

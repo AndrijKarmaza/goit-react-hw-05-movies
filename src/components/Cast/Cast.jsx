@@ -3,13 +3,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BASE_URL, KEY, BASE_IMG_URL } from '../servises/api.js';
 import avatarCasts from '../../images/avatar_casts.png';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const Cast = () => {
   const { movieId } = useParams();
 
   const [movieCast, setMovieCast] = useState();
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     async function getMovieCast() {
       try {
         const response = await axios.get(
@@ -17,13 +22,21 @@ const Cast = () => {
         );
         setMovieCast(response.data.cast);
       } catch (error) {
-        console.error(error);
+        setError(true);
+      } finally {
+        setLoading(false);
+        Loading.remove();
       }
     }
     getMovieCast();
   }, [movieId]);
 
-  if (!movieCast) {
+  loading && Loading.standard('Loading...');
+
+  error &&
+    Notify.failure('Oops! Something went wrong. Please try reloading the page');
+
+  if (!movieCast || error) {
     return;
   }
 

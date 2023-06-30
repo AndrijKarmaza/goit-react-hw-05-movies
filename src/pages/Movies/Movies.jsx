@@ -3,9 +3,13 @@ import { useSearchParams, Link, useLocation } from 'react-router-dom';
 import { BASE_URL, KEY, BASE_IMG_URL } from '../../components/servises/api.js';
 import moviePoster from '../../images/movie-poster.png';
 import axios from 'axios';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const Movies = () => {
   const [movieList, setMovieList] = useState();
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const value = searchParams.get('value');
   const location = useLocation();
@@ -14,6 +18,7 @@ const Movies = () => {
     if (!value) {
       return;
     } else {
+      setLoading(true);
       async function getMovieList() {
         try {
           const response = await axios.get(
@@ -21,17 +26,27 @@ const Movies = () => {
           );
           setMovieList(response.data.results);
         } catch (error) {
-          console.error(error);
+          setError(true);
+        } finally {
+          setLoading(false);
+          Loading.remove();
         }
       }
       getMovieList();
     }
   }, [value]);
 
+  loading && Loading.standard('Loading...');
+
+  error &&
+    Notify.failure('Oops! Something went wrong. Please try reloading the page');
+
   function onFormSubmit(evt) {
     evt.preventDefault();
     const { value } = evt.currentTarget.elements.value;
-    setSearchParams({ value });
+    value.trim() === ''
+      ? Notify.failure('Enter the name of the movie')
+      : setSearchParams({ value: value.trim() });
     evt.currentTarget.reset();
   }
   return (
