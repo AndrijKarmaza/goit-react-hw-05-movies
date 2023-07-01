@@ -50,6 +50,7 @@ const Movies = () => {
       : setSearchParams({ value: value.trim() });
     evt.currentTarget.reset();
   }
+
   return (
     <>
       <form onSubmit={onFormSubmit}>
@@ -65,23 +66,28 @@ const Movies = () => {
           Search
         </button>
       </form>
-      {movieList && (
-        <ul className={css.movie_list}>
-          {movieList.map(({ poster_path, title, id }) => (
-            <Link key={id} to={`${id}`} state={{ from: location }}>
-              <li key={id} className={css.gallery_item}>
-                <img
-                  src={
-                    poster_path ? `${BASE_IMG_URL}${poster_path}` : moviePoster
-                  }
-                  alt={title}
-                />
-                <h2>{title}</h2>
-              </li>
-            </Link>
-          ))}
-        </ul>
-      )}
+      {movieList &&
+        (movieList.length !== 0 ? (
+          <ul className={css.movie_list}>
+            {movieList.map(({ poster_path, title, id }) => (
+              <Link key={id} to={`${id}`} state={{ from: location }}>
+                <li key={id} className={css.gallery_item}>
+                  <img
+                    src={
+                      poster_path
+                        ? `${BASE_IMG_URL}${poster_path}`
+                        : moviePoster
+                    }
+                    alt={title}
+                  />
+                  <h2>{title}</h2>
+                </li>
+              </Link>
+            ))}
+          </ul>
+        ) : (
+          Notify.failure('Nothing found for this query')
+        ))}
     </>
   );
 };
