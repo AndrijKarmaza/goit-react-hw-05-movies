@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BASE_URL, KEY, BASE_IMG_URL } from '../servises/api.js';
+import { fetchMovieCast } from '../../servises/api.js';
 import avatarCasts from '../../images/avatar_casts.png';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
@@ -18,10 +17,8 @@ const Cast = () => {
     setLoading(true);
     async function getMovieCast() {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/movie/${movieId}/credits?api_key=${KEY}`
-        );
-        setMovieCast(response.data.cast);
+        const response = await fetchMovieCast(movieId);
+        setMovieCast(response);
       } catch (error) {
         setError(true);
       } finally {
@@ -41,12 +38,20 @@ const Cast = () => {
     return;
   }
 
+  if (movieCast.length === 0) {
+    return <h3>No cast found for this movie</h3>;
+  }
+
   return (
     <ul className={css.cast_list}>
       {movieCast.map(({ profile_path, name, character, id }) => (
         <li key={id} className={css.cast_list_item}>
           <img
-            src={profile_path ? `${BASE_IMG_URL}${profile_path}` : avatarCasts}
+            src={
+              profile_path
+                ? `https://image.tmdb.org/t/p/w300${profile_path}`
+                : avatarCasts
+            }
             alt={name}
             className={css.cast_img}
           />

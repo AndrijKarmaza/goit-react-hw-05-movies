@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link, useLocation } from 'react-router-dom';
-import { BASE_URL, KEY, BASE_IMG_URL } from '../../components/servises/api.js';
+import { fetchMoviesForQuery } from '../../servises/api.js';
 import moviePoster from '../../images/movie-poster.png';
-import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import css from './Movies.module.css';
@@ -22,10 +21,8 @@ const Movies = () => {
       setLoading(true);
       async function getMovieList() {
         try {
-          const response = await axios.get(
-            `${BASE_URL}/search/movie?api_key=${KEY}&query=${value}`
-          );
-          setMovieList(response.data.results);
+          const response = await fetchMoviesForQuery(value);
+          setMovieList(response);
         } catch (error) {
           setError(true);
         } finally {
@@ -75,7 +72,7 @@ const Movies = () => {
                   <img
                     src={
                       poster_path
-                        ? `${BASE_IMG_URL}${poster_path}`
+                        ? `https://image.tmdb.org/t/p/w300${poster_path}`
                         : moviePoster
                     }
                     alt={title}

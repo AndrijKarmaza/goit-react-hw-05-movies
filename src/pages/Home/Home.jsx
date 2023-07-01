@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BASE_URL, KEY, BASE_IMG_URL } from '../../components/servises/api.js';
+import { fetchMovies } from '../../servises/api.js';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import moviePoster from '../../images/movie-poster.png';
 import css from './Home.module.css';
 
 const Home = () => {
@@ -16,11 +16,8 @@ const Home = () => {
     setLoading(true);
     async function getToplist() {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/trending/movie/week?api_key=${KEY}`
-        );
-        const { results } = response.data;
-        setTopList(results);
+        const response = await fetchMovies();
+        setTopList(response);
       } catch (error) {
         setError(true);
       } finally {
@@ -44,7 +41,11 @@ const Home = () => {
           <Link key={id} to={`/movies/${id}`} state={{ from: location }}>
             <li key={id} className={css.gallery_item}>
               <img
-                src={`${BASE_IMG_URL}${poster_path}`}
+                src={
+                  poster_path
+                    ? `https://image.tmdb.org/t/p/w300${poster_path}`
+                    : moviePoster
+                }
                 alt={title}
                 loading="lazy"
               />

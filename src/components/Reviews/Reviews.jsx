@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BASE_URL, KEY } from '../servises/api.js';
+import { fetchMovieReviews } from '../../servises/api.js';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
@@ -16,10 +15,8 @@ const Reviews = () => {
     setLoading(true);
     async function getMovieReviews() {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/movie/${movieId}/reviews?api_key=${KEY}`
-        );
-        setMovieReviews(response.data.results);
+        const response = await fetchMovieReviews(movieId);
+        setMovieReviews(response);
       } catch (error) {
         setError(true);
       } finally {
